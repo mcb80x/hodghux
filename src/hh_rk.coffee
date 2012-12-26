@@ -1,10 +1,3 @@
-# Program 6.5 Hodgkin-Huxley equations
-# Inputs: [a b] time interval,
-#  ic = initial voltage v and 3 gating variables, step size h
-# Output: solution y
-# Calls a one-step method such as rk4step.m
-# Example usage: y=hh([0 100],[-65 0 0.3 0.6],0.05);
-
 
 class HHSimulationRK4
 
@@ -76,29 +69,22 @@ class HHSimulationRK4
         # Euler term
         k1 = @ydot(@t, @state)
 
-        # console.log('k1: ' + k1)
 
         if @rk4
 
             k2 = @ydot(@t + (@dt / 2),
                        (@state[i] + (@dt * k1[i] / 2) for i in svars))
 
-            # console.log('k2: ' + k2)
-
             k3 = @ydot(@t + @dt / 2,
                        (@state[i] + (@dt * k2[i] / 2) for i in svars))
-
-            # console.log('k3: ' + k3)
 
             k4 = @ydot(@t + @timeStep,
                        (@state[i] + @dt * k3[i] for i in svars))
 
-            # console.log('k4: ' + k4)
-
             @state = (@state[i] + (@dt / 6.0) * (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]) for i in svars)
-            #@state = svars.map((i) -> @state[i] + @dt * (k1[i] + 2*k2[i] + 2*k3[i] + k4[i])/6.0)
+
         else
-            # Euler's method
+            # Euler's method (just use the first term, k1)
             @state = (@state[i] + @dt * k1[i] for i in svars)
 
         @unpackState()
