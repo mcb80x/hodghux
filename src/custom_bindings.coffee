@@ -1,6 +1,9 @@
 
 class CustomBindings
 
+    constructor: ->
+        @manualOutputBindings = []
+
     bindVisible: (selector, observable) ->
         el = d3.select(selector)
 
@@ -25,6 +28,26 @@ class CustomBindings
         observable.subscribe(setter)
         setter(observable())
 
+
+    exposeOutputBindings: (sourceObj, keys, viewModel) ->
+        @manualBindOutput(sourceObj, key, viewModel) for key in keys
+
+    manualBindOutput: (sourceObj, key, viewModel) ->
+        console.log(sourceObj)
+        
+        viewModel[key] = ko.observable(sourceObj[key])
+        @manualOutputBindings.push([sourceObj, key, viewModel[key]])
+
+    updateOutputBindings: ->
+        obs(sourceObj[key]) for [sourceObj, key, obs] in @manualOutputBindings
+
+    manualBindInput: (sourceObj, key, viewModel) ->
+        viewModel[key] = ko.observable(sourceObj[key])
+        viewModel[key].subscribe((newVal) ->
+            sourceObj[key] = newVal)
+
+    exposeInputBindings: (sourceObj, keys, viewModel) ->
+        @manualBindInput(sourceObj, key, viewModel) for key in keys
 
 root = window ? exports
 root.bindings = new CustomBindings

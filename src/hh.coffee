@@ -5,7 +5,7 @@
 root = window ? exports
 
 #<< custom_bindings
-b = root.bindings
+bindings = root.bindings
 
 #<< oscilloscope
 Oscilloscope = root.Oscilloscope
@@ -25,23 +25,16 @@ oscope = null
 simulation = null
 
 
-# # Just a dummy for now
-# class HHSimulation
-#     constructor: ->
-#         @time = 0.0
-#         @timeStep = 0.1
-#         @membranePotential = 0.0
-
-#     update: ->
-#         @time += @timeStep
-#         @membranePotential = Math.sin(@time)
-
-
-
 # A Knockout.js-compatible View Model
 class HHViewModel
     constructor: ->
+        @manualBindings = []
+
+        # Simulation parameters
+        # must be set manually from the 
         @membranePotential = ko.observable(-70.0)
+
+        # View parameters
         @NaChannelVisible = ko.observable(true)
         @KChannelVisible = ko.observable(true)
         @OscilloscopeVisible = ko.observable(false)
@@ -51,20 +44,26 @@ class HHViewModel
 # loaded
 svgDocumentReady = (xml) ->
 
-    # attach the SVG to the DOM in the appropriate place
+    # Attach the SVG to the DOM in the appropriate place
     importedNode = document.importNode(xml.documentElement, true)
     d3.select('#art').node().appendChild(importedNode)
 
-    # build a simulation object
+    # Build a new simulation object
     sim = new HHSimulationRK4()
 
-    # Build a view model obj & set the Knockout.js bindings in motion
+    # Build a view model obj
     viewModel = new HHViewModel()
-    ko.applyBindings(viewModel)
 
-    # bind data to the svg
-    b.bindVisible('#NaChannel', viewModel.NaChannelVisible)
-    b.bindVisible('#KChannel', viewModel.KChannelVisible)
+    # Bind variables from the simulation to the view model
+    bindings.exposeOutputBindings(sim, ['v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
+    bindings.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max'], viewModel)
+
+    # Bind data to the svg
+    bindings.bindVisible('#NaChannel', viewModel.NaChannelVisible)
+    bindings.bindVisible('#KChannel', viewModel.KChannelVisible)
+
+    # Set the html-based Knockout.js bindings in motion
+    ko.applyBindings(viewModel)
 
     oscope = new Oscilloscope(d3.select('#art svg'), d3.select('#oscope'))
 
@@ -75,6 +74,7 @@ svgDocumentReady = (xml) ->
         if isNaN(sim.v)
             runSimulation = false
             return
+        bindings.updateOutputBindings()
         viewModel.membranePotential(sim.v)
         oscope.pushData(sim.t, sim.v)
 

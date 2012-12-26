@@ -17,7 +17,13 @@ html
       ul
         li
           label Membrane Potential:
-            input(data-bind='value: membranePotential')
+            input(data-bind='value: v')
+        li
+          label I_Na:
+            input(data-bind='value: I_Na')
+        li
+          label g_Na_max:
+            input(data-bind='value: g_Na_max')
         li
           label Na Channel Visible:
             input(type='checkbox', data-bind="checked: NaChannelVisible")
