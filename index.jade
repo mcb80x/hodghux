@@ -1,0 +1,24 @@
+html
+
+  head
+
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js')
+    script(src='http://mbostock.github.com/d3/d3.js')
+    script(src='js/app-debug.js')
+
+    link(rel='stylesheet', type='text/css', href='css/hh.css')
+
+  body
+
+    #stage
+      #art
+
+    #properties
+      ul
+        li
+          label Membrane Potential:
+            input(data-bind='value: membranePotential')
+        li
+          label Na Channel Visible:
+            input(type='checkbox', data-bind="checked: NaChannelVisible")
+

@@ -1,0 +1,20 @@
+svg {
+  font: 10px sans-serif;
+}
+
+#oscope {
+  opacity: 0.0;
+}
+
+.line {
+  fill: none;
+  stroke: #5CBA47;
+  stroke-width: 2.5px;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #5CBA47;
+  shape-rendering: crispEdges;
+}
+
