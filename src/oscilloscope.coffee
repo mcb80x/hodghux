@@ -4,13 +4,13 @@ class Oscilloscope
 
     constructor: (@svg, @frame) ->
 
-        @data = [{x:0,y:0}]
+        @data = []
 
         # Data bounds
         @minX = 0.0
         @maxX = 10.0
-        @minY = -1.0
-        @maxY = 1.0
+        @minY = -90.0
+        @maxY = 50.0
 
         @dataXOffset = 0.0
 
