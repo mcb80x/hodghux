@@ -23,7 +23,7 @@ js: ${COFFEE_FILES} dir
 
 svg:
 	mkdir -p www/svg
-	cp art/*.svg www/svg/
+	cp art/*.* www/svg/
 
 serve: all
 	cd www; python -m SimpleHTTPServer 8080

@@ -94,4 +94,4 @@ svgDocumentReady = (xml) ->
 
 $ ->
 	# load the svg artwork and hook everything up
-	d3.xml('svg/membrane_hh.svg', 'image/svg+xml', svgDocumentReady)
+	d3.xml('svg/membrane_hh_raster_shadows_embedded.svg', 'image/svg+xml', svgDocumentReady)
