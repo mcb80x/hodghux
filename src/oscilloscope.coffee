@@ -53,7 +53,10 @@ class Oscilloscope
 
 
     reset: () ->
-        @data = []
+        @data.pop() for t in @data
+        @data.pop()
+        @dataXOffset = 0.0
+        @setScales()
 
 
     pushData: (x, y) ->

@@ -28,6 +28,12 @@ class HHSimulationRK4
         # Internal variables (exposed in case we'd like to plot them)
         @I_Na = @I_K = @I_L = @g_Na = @g_K = @g_L = 0.0
 
+        @reset()
+
+        # Use Runga-Kutta
+        @rk4 = true
+
+    reset: ->
         # Starting (steady) sate
         # v: membrane potential
         # m: Na-channel activation gating variable
@@ -43,10 +49,6 @@ class HHSimulationRK4
 
         # Starting time for simulation
         @t = 0.0
-
-        # Use Runga-Kutta
-        @rk4 = true
-
 
     unpackState: ->
         [@v, @m, @n, @h] = @state
