@@ -1,40 +1,63 @@
 
+hideElement = (el) ->
+    el.attr('opacity', 0.0)
+
+showElement = (el) ->
+    el.attr('opacity', 1.0)
+
+
 class CustomBindings
 
     constructor: ->
         @manualOutputBindings = []
 
+
     bindVisible: (selector, observable) ->
         el = d3.select(selector)
 
+        thisobj = this
         setter = (newVal) ->
             if newVal
-                el.attr('opacity', 1.0)
+                showElement(el)
             else
-                el.attr('opacity', 0.0)
+                hideElement(el)
 
         observable.subscribe(setter)
         setter(observable())
 
 
-    bindAttr: (selector, attr, observable) ->
+    bindAttr: (selector, attr, observable, mapping) ->
 
         el = d3.select(selector)
         console.log(el)
 
         setter = (newVal) ->
-            el.attr(attr, newVal)
+            el.attr(attr, mapping(newVal))
 
         observable.subscribe(setter)
         setter(observable())
 
+    bindMultiState: (selectorMap, observable) ->
+        keys = Object.keys(selectorMap)
+        values = (selectorMap[k] for k in keys)
+        elements = (d3.select(s) for s in keys)
+
+        setter = (val) ->
+            # hide all of the alternatives
+            hideElement(el) for el in elements
+
+            matchSelectors = (keys[i] for i in [0 .. keys.length] when values[i] == val)
+            matchElements = (d3.select(s) for s in matchSelectors)
+            showElement(el) for el in matchElements
+
+        observable.subscribe(setter)
+
+        setter(observable())
 
     exposeOutputBindings: (sourceObj, keys, viewModel) ->
         @manualBindOutput(sourceObj, key, viewModel) for key in keys
 
     manualBindOutput: (sourceObj, key, viewModel) ->
-        console.log(sourceObj)
-        
         viewModel[key] = ko.observable(sourceObj[key])
         @manualOutputBindings.push([sourceObj, key, viewModel[key]])
 

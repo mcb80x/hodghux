@@ -20,11 +20,28 @@ html
             input(data-bind='value: v')
         li
           label I_Na:
-            input(data-bind='value: I_Na')
+            p(data-bind='text: I_Na')
+        li
+          label I_K:
+            p(data-bind='text: I_K')
+
+        li
+          label m:
+            p(data-bind='text: m')
+        li
+          label n:
+            p(data-bind='text: n')
+        li
+          label h:
+            p(data-bind='text: h')
+
         li
           label g_Na_max:
             input(data-bind='value: g_Na_max')
         li
           label Na Channel Visible:
             input(type='checkbox', data-bind="checked: NaChannelVisible")
+        li
+          label Na Channel Open:
+            input(type='checkbox', data-bind="checked: NaChannelOpen")
 

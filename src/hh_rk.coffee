@@ -4,9 +4,9 @@ class HHSimulationRK4
     constructor: ->
 
         # Stimulus
-        @pulseInterval = [0.0, 5.0]         # ms
-        @pulseAmplitude = 7.0               # uA / cm^2
-        @dt = 0.025                         # ms
+        @pulseInterval = [0.0, Infinity]         # ms
+        @pulseAmplitude = 15.0               # uA / cm^2
+        @dt = 0.05                         # ms
 
         # Capacitance
         @C_m = 1.0                          # uF / cm^2

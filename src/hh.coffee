@@ -30,15 +30,12 @@ class HHViewModel
     constructor: ->
         @manualBindings = []
 
-        # Simulation parameters
-        # must be set manually from the 
-        @membranePotential = ko.observable(-70.0)
-
         # View parameters
         @NaChannelVisible = ko.observable(true)
         @KChannelVisible = ko.observable(true)
         @OscilloscopeVisible = ko.observable(false)
 
+        # @NaChannelOpen = ko.observable(true)
 
 # Main initialization function; triggered after the SVG doc is
 # loaded
@@ -58,9 +55,19 @@ svgDocumentReady = (xml) ->
     bindings.exposeOutputBindings(sim, ['v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
     bindings.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max'], viewModel)
 
+    viewModel.NaChannelOpen = ko.computed(-> (viewModel.m() > 0.5))
+    viewModel.KChannelOpen = ko.computed(-> (viewModel.n() > 0.5))
+    viewModel.BallAndChainOpen = ko.computed(-> (viewModel.h() > 0.3))
+
     # Bind data to the svg
     bindings.bindVisible('#NaChannel', viewModel.NaChannelVisible)
     bindings.bindVisible('#KChannel', viewModel.KChannelVisible)
+    bindings.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, viewModel.NaChannelOpen)
+    bindings.bindMultiState({'#KChannelClosed':false, '#KChannelOpen':true}, viewModel.KChannelOpen)
+    bindings.bindMultiState({'#BallAndChainClosed':false, '#BallAndChainOpen':true}, viewModel.BallAndChainOpen)
+
+    bindings.bindAttr('#NaArrow', 'opacity', viewModel.I_Na, d3.scale.linear().domain([0, -100]).range([0, 1.0]))
+    bindings.bindAttr('#KArrow', 'opacity', viewModel.I_K, d3.scale.linear().domain([10, 100]).range([0, 1.0]))
 
     # Set the html-based Knockout.js bindings in motion
     ko.applyBindings(viewModel)
@@ -75,15 +82,14 @@ svgDocumentReady = (xml) ->
             runSimulation = false
             return
         bindings.updateOutputBindings()
-        viewModel.membranePotential(sim.v)
         oscope.pushData(sim.t, sim.v)
 
-    updateTimer = setInterval(update, 10)
+    updateTimer = setInterval(update, 100)
 
     heartbeat = ->
         if not runSimulation
             clearInterval(updateTimer)
-    setInterval(heartbeat, 50)
+    setInterval(heartbeat, 500)
 
 
 $ ->
