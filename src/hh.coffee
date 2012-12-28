@@ -13,6 +13,9 @@ Oscilloscope = root.Oscilloscope
 #<< hh_rk
 HHSimulationRK4 = root.HHSimulationRK4
 
+#<< util
+util = root.util
+
 # ----------------------------------------------------
 
 
@@ -72,7 +75,11 @@ svgDocumentReady = (xml) ->
     # Set the html-based Knockout.js bindings in motion
     ko.applyBindings(viewModel)
 
+    # Make an oscilloscope and attach it to the svg
     oscope = new Oscilloscope(d3.select('#art svg'), d3.select('#oscope'))
+
+    # Float a div over a rect in the svg
+    util.floatOverRect('#art svg', '#floatrect', '#floaty')
 
     runSimulation = true
     maxSimTime = 10.0

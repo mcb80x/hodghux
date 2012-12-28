@@ -2,16 +2,25 @@ html
 
   head
 
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js')
+    // script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js')
+    // script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js')
     script(src='http://mbostock.github.com/d3/d3.js')
     script(src='js/app-debug.js')
 
+    link(rel='stylesheet', type='text/css', href='css/jquery-ui-1.9.2.custom.css')
     link(rel='stylesheet', type='text/css', href='css/hh.css')
 
   body
 
     #stage
       #art
+
+
+    #floaty.properties-pane
+      label Na Conductance:
+        span(data-bind='text: g_Na_max')
+      br
+      div(data-bind="slider: g_Na_max, sliderOptions: {min: 0, max: 300, range: false, step: 5}")
 
     #properties
       ul
@@ -21,6 +30,7 @@ html
         li
           label I_Na:
             p(data-bind='text: I_Na')
+
         li
           label I_K:
             p(data-bind='text: I_K')
@@ -37,7 +47,8 @@ html
 
         li
           label g_Na_max:
-            input(data-bind='value: g_Na_max')
+            span(data-bind='text: g_Na_max')
+            div(data-bind="slider: g_Na_max, sliderOptions: {min: 0, max: 300, range: false, step: 5}")
         li
           label Na Channel Visible:
             input(type='checkbox', data-bind="checked: NaChannelVisible")

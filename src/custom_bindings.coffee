@@ -5,6 +5,33 @@ hideElement = (el) ->
 showElement = (el) ->
     el.attr('opacity', 1.0)
 
+# A knockout jquery-ui handler
+ko.bindingHandlers.slider =
+
+    init: (element, valueAccessor, allBindingsAccessor)  ->
+        options = allBindingsAccessor().sliderOptions || {}
+        $(element).slider(options)
+        ko.utils.registerEventHandler(element, 'slidechange', (event, ui) ->
+            observable = valueAccessor()
+            observable(ui.value)
+        )
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, () ->
+            $(element).slider('destroy')
+        )
+
+        ko.utils.registerEventHandler(element, 'slide', (event, ui) ->
+            observable = valueAccessor()
+            observable(ui.value)
+        )
+
+    update: (element, valueAccessor) ->
+        value = ko.utils.unwrapObservable(valueAccessor())
+        if (isNaN(value))
+            value = 0
+        $(element).slider('value', value)
+
+
 
 class CustomBindings
 

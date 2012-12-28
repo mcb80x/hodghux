@@ -9,7 +9,7 @@ all: html js svg css
 
 css: ${CSS_FILES}
 	mkdir -p www/css
-	cp css/*.css www/css/
+	cp -r css/* www/css/
 
 html: ${JADE_FILES}
 	jade --out www/ .

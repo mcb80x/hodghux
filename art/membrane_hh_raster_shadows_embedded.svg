@@ -40,9 +40,9 @@
    gridtolerance="10"
    guidetolerance="10"
    showgrid="false"
-   inkscape:zoom="1.2156029"
-   inkscape:cx="-240.78206"
-   inkscape:cy="483.36628"
+   inkscape:zoom="0.60780145"
+   inkscape:cx="995.93662"
+   inkscape:cy="405.11776"
    fit-margin-top="0"
    fit-margin-left="0"
    borderopacity="1"
@@ -1991,30 +1991,7 @@
 		</g>
 	</g>
 </g>
-<g
-   id="g925"
-   transform="translate(-11.140001,-462.26746)">
-	<g
-   id="g927">
-		<rect
-   id="rect929"
-   x="806.749"
-   y="535.795"
-   fill="#FFFFFF"
-   width="372.455"
-   height="115.546" />
-		
-			<rect
-   id="rect931"
-   x="806.749"
-   y="535.795"
-   fill="none"
-   stroke="#000000"
-   stroke-miterlimit="10"
-   width="372.455"
-   height="115.546" />
-	</g>
-</g>
+
 <polyline
    id="polyline935"
    fill="none"
@@ -4220,11 +4197,13 @@
    font-family="'Helvetica-Bold'"
    font-size="48.2094">K</text>
 
+
 	<text
    id="text1916"
    transform="matrix(1 0 0 1 763.5131 741.3378)"
    font-family="'Helvetica-Bold'"
    font-size="28.1062">+</text>
+
 
 </g>
 <g
@@ -4236,11 +4215,13 @@
    font-family="'Helvetica-Bold'"
    font-size="48.2094">Na</text>
 
+
 	<text
    id="text1922"
    transform="matrix(1 0 0 1 573.724 741.3378)"
    font-family="'Helvetica-Bold'"
    font-size="28.1062">+</text>
+
 
 </g>
 <text
@@ -4249,11 +4230,13 @@
    font-family="'Helvetica-Bold'"
    font-size="17.93">VO</text>
 
+
 <text
    id="text975"
    transform="matrix(1 0 0 1 154.292 50.2793)"
    font-family="'Helvetica-Bold'"
    font-size="17.93">LT</text>
+
 
 <text
    id="text977"
@@ -4261,17 +4244,20 @@
    font-family="'Helvetica-Bold'"
    font-size="17.93">AGE (E</text>
 
+
 <text
    id="text1932"
    transform="matrix(1 0 0 1 237.9678 54.3828)"
    font-family="'Helvetica-Bold'"
    font-size="17.93">m</text>
 
+
 <text
    id="text1934"
    transform="matrix(1 0 0 1 253.9102 50.2793)"
    font-family="'Helvetica-Bold'"
    font-size="17.93">)</text>
+
 
 <text
    id="text1936"
@@ -4280,6 +4266,7 @@
    font-family="'Helvetica-Bold'"
    font-size="41.8367">extracellular</text>
 
+
 <text
    id="text1938"
    transform="matrix(1 0 0 1 1001.8652 563.4512)"
@@ -4287,11 +4274,8 @@
    font-family="'Helvetica-Bold'"
    font-size="41.8367">intracellular</text>
 
-<path
-   id="path1940"
-   inkscape:connector-curvature="0"
-   fill="#B7B7B8"
-   d="M1057.428,151.938c0,2.959-4.691,5.36-10.481,5.36h-219.71  c-5.789,0-10.485-2.401-10.485-5.36l0,0c0-2.959,4.696-5.36,10.485-5.36h219.707  C1052.732,146.556,1057.428,148.979,1057.428,151.938L1057.428,151.938z" />
+
+
 <radialGradient
    id="circle1947_1_"
    cx="-337.5815"
@@ -4308,17 +4292,7 @@
    style="stop-color:#010101"
    id="stop1016" />
 </radialGradient>
-<circle
-   id="circle1947"
-   sodipodi:rx="5.6700001"
-   sodipodi:ry="5.6700001"
-   sodipodi:cy="533.13"
-   sodipodi:cx="408.64001"
-   fill="url(#circle1947_1_)"
-   cx="866.58"
-   cy="151.938"
-   r="12.157">
-</circle>
+
 <g
    id="KArrow"
    transform="translate(-11.140001,-462.26746)">
@@ -4435,124 +4409,27 @@
    r="17.817">
 	</circle>
 </g>
-<text
-   id="text1006"
-   transform="matrix(1 0 0 1 816.1699 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">M</text>
 
-<text
-   id="text1008"
-   transform="matrix(1 0 0 1 838.3408 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">emb</text>
 
-<text
-   id="text1010"
-   transform="matrix(1 0 0 1 890.293 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">r</text>
 
-<text
-   id="text1012"
-   transform="matrix(1 0 0 1 899.5342 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">ane </text>
 
-<text
-   id="text1014"
-   transform="matrix(1 0 0 1 947.6055 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">P</text>
 
-<text
-   id="text1016"
-   transform="matrix(1 0 0 1 961.8418 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">o</text>
 
-<text
-   id="text1018"
-   transform="matrix(1 0 0 1 976.873 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">t</text>
 
-<text
-   id="text1020"
-   transform="matrix(1 0 0 1 986.0703 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">e</text>
 
-<text
-   id="text1022"
-   transform="matrix(1 0 0 1 999.8145 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">n</text>
 
-<text
-   id="text1024"
-   transform="matrix(1 0 0 1 1014.9307 114.248)"
-   font-family="'MyriadPro-Semibold'"
-   font-size="26.6542">tial</text>
 
-<g
-   id="g2021"
-   transform="translate(-11.140001,-462.26746)">
-	<g
-   id="g2023">
-		<g
-   id="g2025">
-			
-				<circle
-   id="circle2027"
-   sodipodi:rx="15.64"
-   sodipodi:ry="15.64"
-   sodipodi:cy="521.28003"
-   sodipodi:cx="523.70001"
-   fill="#FFFFFF"
-   stroke="#5CBA47"
-   stroke-width="3"
-   stroke-miterlimit="10"
-   cx="1124.421"
-   cy="588.797"
-   r="33.534"
-   d="m 1157.955,588.797 c 0,18.52031 -15.0137,33.534 -33.534,33.534 -18.5203,0 -33.534,-15.01369 -33.534,-33.534 0,-18.52032 15.0137,-33.534 33.534,-33.534 18.5203,0 33.534,15.01368 33.534,33.534 z">
-			</circle>
-			
-				<circle
-   id="circle2029"
-   sodipodi:rx="15.64"
-   sodipodi:ry="15.64"
-   sodipodi:cy="521.28003"
-   sodipodi:cx="523.70001"
-   fill="#FFFFFF"
-   stroke="#5CBA47"
-   stroke-width="3"
-   stroke-miterlimit="10"
-   cx="1124.421"
-   cy="588.797"
-   r="33.534"
-   d="m 1157.955,588.797 c 0,18.52031 -15.0137,33.534 -33.534,33.534 -18.5203,0 -33.534,-15.01369 -33.534,-33.534 0,-18.52032 15.0137,-33.534 33.534,-33.534 18.5203,0 33.534,15.01368 33.534,33.534 z">
-			</circle>
-		</g>
-	</g>
-	
-		<text
-   id="text2031"
-   transform="matrix(1 0 0 1 1101.9213 590.2284)"
-   fill="#9A1C1F"
-   font-family="'Helvetica-Bold'"
-   font-size="28.7475">-70</text>
 
-	
-		<text
-   id="text2033"
-   transform="matrix(1 0 0 1 1110.6791 609.5917)"
-   fill="#5E5F5F"
-   font-family="'MyriadPro-Semibold'"
-   font-size="18.9128">mV</text>
 
-</g>
+
+
+
+
+
+
+
+
+
 <g
    id="NaChannelOpen"
    transform="translate(-11.140001,-462.26746)">
@@ -4747,4 +4624,10 @@
    ry="20.206">
 	</ellipse>
 </g>
-</svg>
+<rect
+   style="fill:#000000"
+   id="floatrect"
+   width="457.3862"
+   height="123.39556"
+   x="723.92059"
+   y="68.471451" /></svg>
