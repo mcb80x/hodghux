@@ -81,22 +81,36 @@ bindings =
         setter(observable())
 
     exposeOutputBindings: (sourceObj, keys, viewModel) ->
-        @manualBindOutput(sourceObj, key, viewModel) for key in keys
+        @bindOutput(sourceObj, key, viewModel) for key in keys
 
-    manualBindOutput: (sourceObj, key, viewModel) ->
-        viewModel[key] = ko.observable(sourceObj[key])
-        manualOutputBindings.push([sourceObj, key, viewModel[key]])
+    bindOutput: (sourceObj, key, viewModel, key2) ->
+        if not key2?
+            key2 = key
+
+        if viewModel[key2]?
+            viewModel[key2](sourceObj[key])
+        else
+            viewModel[key2] = ko.observable(sourceObj[key])
+        manualOutputBindings.push([sourceObj, key, viewModel[key2]])
 
     update: ->
         obs(sourceObj[key]) for [sourceObj, key, obs] in manualOutputBindings
 
-    manualBindInput: (sourceObj, key, viewModel) ->
-        viewModel[key] = ko.observable(sourceObj[key])
-        viewModel[key].subscribe((newVal) ->
-            sourceObj[key] = newVal)
+    bindInput: (sourceObj, key, viewModel, key2, cb) ->
+        if not key2?
+            key2 = key
+
+        if viewModel[key2]?
+            viewModel[key2](sourceObj[key])
+        else
+            viewModel[key2] = ko.observable(sourceObj[key])
+        viewModel[key2].subscribe((newVal) ->
+            sourceObj[key] = newVal
+            cb() if cb?
+        )
 
     exposeInputBindings: (sourceObj, keys, viewModel) ->
-        @manualBindInput(sourceObj, key, viewModel) for key in keys
+        @bindInput(sourceObj, key, viewModel) for key in keys
 
 
 

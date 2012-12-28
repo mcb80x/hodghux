@@ -5,7 +5,7 @@
 root = window ? exports
 
 #<< custom_bindings
-bindings = root.bindings
+b = root.bindings
 
 #<< oscilloscope
 Oscilloscope = root.Oscilloscope
@@ -13,8 +13,12 @@ Oscilloscope = root.Oscilloscope
 #<< hh_rk
 HHSimulationRK4 = root.HHSimulationRK4
 
+#<< stim
+SquareWavePulse = root.SquareWavePulse
+
 #<< util
 util = root.util
+
 
 # ----------------------------------------------------
 
@@ -55,13 +59,19 @@ initializeSimulation = () ->
     # Build a new simulation object
     sim = new HHSimulationRK4()
 
+    # Build a square-wave pulse object
+    pulse = new SquareWavePulse([0.0, 1.0], 15.0)
+
     # Build a view model obj to manage KO bindings
     viewModel = new HHViewModel()
 
     # Bind variables from the simulation to the view model
-    bindings.exposeOutputBindings(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
-    bindings.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max'], viewModel)
-    sim.stepCallback = bindings.update
+    b.exposeOutputBindings(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
+    b.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max', 'I_ext'], viewModel)
+
+    # Hook up the pulse object
+    b.bindOutput(pulse, 'I_stim', viewModel, 'I_ext')
+    b.bindInput(pulse, 't', viewModel, 't', -> pulse.update())
 
     # Add a few computed / derivative observables
     viewModel.NaChannelOpen = ko.computed(-> (viewModel.m() > 0.5))
@@ -69,14 +79,14 @@ initializeSimulation = () ->
     viewModel.BallAndChainOpen = ko.computed(-> (viewModel.h() > 0.3))
 
     # Bind data to the svg to marionette parts of the artwork
-    bindings.bindVisible('#NaChannel', viewModel.NaChannelVisible)
-    bindings.bindVisible('#KChannel', viewModel.KChannelVisible)
-    bindings.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, viewModel.NaChannelOpen)
-    bindings.bindMultiState({'#KChannelClosed':false, '#KChannelOpen':true}, viewModel.KChannelOpen)
-    bindings.bindMultiState({'#BallAndChainClosed':false, '#BallAndChainOpen':true}, viewModel.BallAndChainOpen)
+    b.bindVisible('#NaChannel', viewModel.NaChannelVisible)
+    b.bindVisible('#KChannel', viewModel.KChannelVisible)
+    b.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, viewModel.NaChannelOpen)
+    b.bindMultiState({'#KChannelClosed':false, '#KChannelOpen':true}, viewModel.KChannelOpen)
+    b.bindMultiState({'#BallAndChainClosed':false, '#BallAndChainOpen':true}, viewModel.BallAndChainOpen)
 
-    bindings.bindAttr('#NaArrow', 'opacity', viewModel.I_Na, d3.scale.linear().domain([0, -100]).range([0, 1.0]))
-    bindings.bindAttr('#KArrow', 'opacity', viewModel.I_K, d3.scale.linear().domain([20, 100]).range([0, 1.0]))
+    b.bindAttr('#NaArrow', 'opacity', viewModel.I_Na, d3.scale.linear().domain([0, -100]).range([0, 1.0]))
+    b.bindAttr('#KArrow', 'opacity', viewModel.I_K, d3.scale.linear().domain([20, 100]).range([0, 1.0]))
 
     # Set the html-based Knockout.js bindings in motion
     # This will allow templated 'data-bind' directives to automagically control the simulation / views
@@ -95,7 +105,7 @@ initializeSimulation = () ->
     update = ->
 
         # Update the simulation
-        sim.step()
+        sim.step(b.update)
 
         # stop if the result is silly
         if isNaN(sim.v)

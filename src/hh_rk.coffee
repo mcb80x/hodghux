@@ -1,11 +1,12 @@
 
 class HHSimulationRK4
 
-    constructor: (@stepCallback) ->
+    constructor: ->
 
         # Stimulus
-        @pulseInterval = [0.0, Infinity]         # ms
-        @pulseAmplitude = 15.0               # uA / cm^2
+        @I_ext = 0.0               # uA / cm^2
+
+        # Time Step
         @dt = 0.05                         # ms
 
         # Capacitance
@@ -59,7 +60,7 @@ class HHSimulationRK4
         @v -= 65.0
 
 
-    step: ->
+    step: (stepCallback) ->
 
         # update the time
         @t += @dt
@@ -91,8 +92,8 @@ class HHSimulationRK4
 
         @unpackState()
 
-        if @stepCallback?
-            @stepCallback()
+        if stepCallback?
+            stepCallback()
 
 
     # Na channel activation
@@ -121,11 +122,6 @@ class HHSimulationRK4
     ydot: (t, s) ->
         # Compute the slope of the state vector
         # t: time, s: start state
-
-        # External AP trigger (square wave pulse)
-        @I_ext = 0
-        if t > @pulseInterval[0] and t < @pulseInterval[1]
-            @I_ext = @pulseAmplitude
 
         # Unpack the incoming state
         [v, m, n, h] = s
