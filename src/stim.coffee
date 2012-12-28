@@ -7,7 +7,6 @@ class SquareWavePulse
 
 
 	update: ->
-		console.log('setting stim')
 		if @t > @interval[0] and @t < @interval[1]
 
 			@I_stim = @amplitude

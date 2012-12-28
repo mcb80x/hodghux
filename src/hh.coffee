@@ -23,15 +23,6 @@ util = root.util
 # ----------------------------------------------------
 
 
-
-# ----------------------------------------------------
-# Globals
-# ----------------------------------------------------
-
-oscope = null
-simulation = null
-
-
 # A Knockout.js-compatible View Model
 class HHViewModel
     constructor: ->
@@ -122,10 +113,11 @@ initializeSimulation = () ->
 
     updateTimer = setInterval(update, 100)
 
-    heartbeat = ->
+    # Start a timer to keep an eye on the simulation
+    watchDog = ->
         if not runSimulation
             clearInterval(updateTimer)
-    setInterval(heartbeat, 500)
+    setInterval(watchDog, 500)
 
 
 $ ->
