@@ -1,7 +1,7 @@
 
 class HHSimulationRK4
 
-    constructor: ->
+    constructor: (@stepCallback) ->
 
         # Stimulus
         @pulseInterval = [0.0, Infinity]         # ms
@@ -21,7 +21,7 @@ class HHSimulationRK4
         @E_K = -12                          # mV
         @E_L = 10.6                         # mV
 
-        # Resting Potential
+        # Resting Potential (a la H&H 1952)
         @V_rest = 0.0                       # mV
 
 
@@ -59,7 +59,7 @@ class HHSimulationRK4
         @v -= 65.0
 
 
-    update: ->
+    step: ->
 
         # update the time
         @t += @dt
@@ -90,6 +90,9 @@ class HHSimulationRK4
             @state = (@state[i] + @dt * k1[i] for i in svars)
 
         @unpackState()
+
+        if @stepCallback?
+            @stepCallback()
 
 
     # Na channel activation

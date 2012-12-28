@@ -33,11 +33,10 @@ ko.bindingHandlers.slider =
 
 
 
-class CustomBindings
 
-    constructor: ->
-        @manualOutputBindings = []
+@manualOutputBindings = []
 
+bindings =
 
     bindVisible: (selector, observable) ->
         el = d3.select(selector)
@@ -86,10 +85,10 @@ class CustomBindings
 
     manualBindOutput: (sourceObj, key, viewModel) ->
         viewModel[key] = ko.observable(sourceObj[key])
-        @manualOutputBindings.push([sourceObj, key, viewModel[key]])
+        manualOutputBindings.push([sourceObj, key, viewModel[key]])
 
-    updateOutputBindings: ->
-        obs(sourceObj[key]) for [sourceObj, key, obs] in @manualOutputBindings
+    update: ->
+        obs(sourceObj[key]) for [sourceObj, key, obs] in manualOutputBindings
 
     manualBindInput: (sourceObj, key, viewModel) ->
         viewModel[key] = ko.observable(sourceObj[key])
@@ -99,5 +98,7 @@ class CustomBindings
     exposeInputBindings: (sourceObj, keys, viewModel) ->
         @manualBindInput(sourceObj, key, viewModel) for key in keys
 
+
+
 root = window ? exports
-root.bindings = new CustomBindings
+root.bindings = bindings

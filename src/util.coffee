@@ -19,7 +19,6 @@ util =
         # trick from http://stackoverflow.com/questions/5834298/getting-the-screen-pixel-coordinates-of-a-rect-element
         pt  = svg.createSVGPoint()
         resizeIt = () ->
-            console.log('movin')
             corners = {}
             matrix  = rect.getScreenCTM()
             pt.x = rect.x.animVal.value

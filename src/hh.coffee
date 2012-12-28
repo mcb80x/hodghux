@@ -48,21 +48,27 @@ svgDocumentReady = (xml) ->
     importedNode = document.importNode(xml.documentElement, true)
     d3.select('#art').node().appendChild(importedNode)
 
+    initializeSimulation()
+
+initializeSimulation = () ->
+
     # Build a new simulation object
     sim = new HHSimulationRK4()
 
-    # Build a view model obj
+    # Build a view model obj to manage KO bindings
     viewModel = new HHViewModel()
 
     # Bind variables from the simulation to the view model
-    bindings.exposeOutputBindings(sim, ['v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
+    bindings.exposeOutputBindings(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
     bindings.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max'], viewModel)
+    sim.stepCallback = bindings.update
 
+    # Add a few computed / derivative observables
     viewModel.NaChannelOpen = ko.computed(-> (viewModel.m() > 0.5))
     viewModel.KChannelOpen = ko.computed(-> (viewModel.n() > 0.65))
     viewModel.BallAndChainOpen = ko.computed(-> (viewModel.h() > 0.3))
 
-    # Bind data to the svg
+    # Bind data to the svg to marionette parts of the artwork
     bindings.bindVisible('#NaChannel', viewModel.NaChannelVisible)
     bindings.bindVisible('#KChannel', viewModel.KChannelVisible)
     bindings.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, viewModel.NaChannelOpen)
@@ -73,10 +79,11 @@ svgDocumentReady = (xml) ->
     bindings.bindAttr('#KArrow', 'opacity', viewModel.I_K, d3.scale.linear().domain([20, 100]).range([0, 1.0]))
 
     # Set the html-based Knockout.js bindings in motion
+    # This will allow templated 'data-bind' directives to automagically control the simulation / views
     ko.applyBindings(viewModel)
 
     # Make an oscilloscope and attach it to the svg
-    oscope = new Oscilloscope(d3.select('#art svg'), d3.select('#oscope'))
+    oscope = oscilloscope('#art svg', '#oscope').data(-> [sim.t, sim.v])
 
     # Float a div over a rect in the svg
     util.floatOverRect('#art svg', '#floatrect', '#floaty')
@@ -86,15 +93,22 @@ svgDocumentReady = (xml) ->
     oscope.maxX = maxSimTime
 
     update = ->
-        sim.update()
+
+        # Update the simulation
+        sim.step()
+
+        # stop if the result is silly
         if isNaN(sim.v)
             runSimulation = false
             return
-        bindings.updateOutputBindings()
-        oscope.pushData(sim.t, sim.v)
+
+        # Tell the oscilloscope to plot
+        oscope.plot()
+
         if sim.t >= maxSimTime
             sim.reset()
             oscope.reset()
+
 
     updateTimer = setInterval(update, 100)
 

@@ -1,78 +1,125 @@
 # A d3.js-based oscilloscope
 
-class Oscilloscope
+# A more d3-ish implementation
+oscilloscope = (svgSelector, frameSelector) ->
+    svg = d3.select(svgSelector)
+    frame = d3.select(frameSelector)
 
-    constructor: (@svg, @frame) ->
+    dataBuffer = []
 
-        @data = []
+    # Domain defaults
+    minX = 0.0
+    maxX = 10.0
+    minY = -90.0
+    maxY = 50
+    dataXOffset = 0.0
 
-        # Data bounds
-        @minX = 0.0
-        @maxX = 10.0
-        @minY = -90.0
-        @maxY = 50.0
+    # Display defaults
+    margin = {top: 5.0, right: 5.0, bottom: 5.0, left: 5.0}
 
-        @dataXOffset = 0.0
+    xScale = undefined
+    yScale = undefined
+    width = 0
+    height = 0
 
+    setScales = ->
+        frameXOffset = Number(frame.attr('x'))
+        frameYOffset = Number(frame.attr('y'))
+        width = Number(frame.attr('width')) - margin.left - margin.right
+        height = Number(frame.attr('height')) - margin.top - margin.bottom
 
-        # Frame bounds
-        @margin = {top: 5.0, right: 5.0, bottom: 5.0, left: 5.0}
-        @width = Number(@frame.attr('width')) - @margin.left - @margin.right
-        @height = Number(@frame.attr('height')) - @margin.top - @margin.bottom
+        xScale = d3.scale.linear()
+                    .domain([minX, maxX])
+                    .range([frameXOffset+margin.left, frameXOffset+margin.left+width])
 
-        @frameXOffset = Number(@frame.attr('x'))
-        @frameYOffset = Number(@frame.attr('y'))
+        yScale = d3.scale.linear()
+                    .domain([minY, maxY])
+                    .range([frameYOffset + height + margin.top, frameYOffset + margin.top])
 
-        @setScales()
+    setScales()
 
-        o = this
-        @line = d3.svg.line()
-                    .x((d,i) -> o.xScale(d.x))
-                    .y((d,i) -> o.yScale(d.y))
-
-        left = @margin.left + @xOffset
-        top = @margin.top + @yOffset
-
-        @plot = svg.insert('g', '#oscope')
-
-        @path = @plot.append('path')
-                    .data([@data])
-                    .attr('class', 'line')
-                    .attr('d', @line)
-
-
-
-    setScales: () ->
-        @xScale = d3.scale.linear()
-                    .domain([@minX, @maxX])
-                    .range([@frameXOffset+@margin.left, @frameXOffset+@margin.left+@width])
-
-        @yScale = d3.scale.linear()
-                    .domain([@minY, @maxY])
-                    .range([@frameYOffset + @height + @margin.top, @frameYOffset + @margin.top]);
+    line = d3.svg.line()
+                .x((d,i) -> xScale(d[0]))
+                .y((d,i) -> yScale(d[1]))
 
 
-    reset: () ->
-        @data.pop() for t in @data
-        @data.pop()
-        @dataXOffset = 0.0
-        @setScales()
+    plot = svg.insert('g', '#oscope')
+
+    path = plot.append('path')
+        .data([dataBuffer])
+        .attr('class', 'line')
+        .attr('d', line)
 
 
-    pushData: (x, y) ->
+    # a proxy object to pass around d3-style
+    proxy = {}
 
-        xval = x - @dataXOffset
+    proxy.setScales = setScales
 
-        if xval > @maxX
-            @data.pop() for t in @data
-            @data.pop()
-            @dataXOffset = x
+    base = this
+    addProperty = (name, cb) ->
+        f = (val) ->
+            if val?
+                base[name] = val
+                cb() if cb?
+                return proxy
+            else
+                return base[name]
+
+        proxy[name] = f
+
+
+    addProperty(name, proxy.setScales) for name in ['minX', 'maxX', 'minY', 'maxY']
+
+    addProperty(name) for name in ['margin', 'width']
+
+    proxy.reset = ->
+        dataBuffer.pop() for t in dataBuffer
+        dataBuffer.pop()
+        dataXOffset = 0.0
+        setScales()
+
+        return proxy
+
+    dataFn = -> undefined
+
+    proxy.data = (d) ->
+        console.log('data() got: ' + d)
+        if not d?
+            return dataFn
+        else if $.isFunction(d)
+            dataFn = d
+        else
+            dataFn = -> d
+
+        return proxy
+
+    proxy.plot = ->
+
+        # get one data point
+        [x, y] = dataFn()
+
+        # Handle the xoffset / sweep of the scope
+        xval = x - dataXOffset
+
+        if xval > maxX
+            dataBuffer.pop() for t in dataBuffer
+            dataBuffer.pop()
+            dataXOffset = x
             xval = 0.0
 
-        @data.push({x:xval,y:y})
+        # Push the new value onto the dataBuffer
+        dataBuffer.push([xval, y])
 
-        @path.attr('d', @line)
+        # Instruct d3 to redraw the line
+        path.data([dataBuffer]).attr('d', line)
+
+        return proxy
+
+    return proxy
+
+
 
 
 root = window ? exports
-root.Oscilloscope = Oscilloscope
+root.oscilloscope = oscilloscope
