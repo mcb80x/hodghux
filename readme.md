@@ -1,4 +1,7 @@
+# MCB80x Hodgkin-Huxley Simulator
 Some experiments in building a Hodkin-Huxley simulator for mcb80x.
+
+Live demo: [mcb80x.github.com/hodghux]()
 
 # Dependencies:
 
@@ -10,7 +13,6 @@ Some experiments in building a Hodkin-Huxley simulator for mcb80x.
 npm install -g jade
 npm install -g coffee-script
 npm install -g coffee-toaster
-
 ```
 
 # Building
