@@ -1,19 +1,15 @@
-.PHONY: svg dir css
+.PHONY: svg dir css js serve
 
-JADE_FILES=${wildcard *.jade}
-COFFEE_FILES=${wildcard scripts/*.coffee}
-CSS_FILES=${wildcard css/*.css}
-SVG_FILES=${wildcard art/*.svg}
 
 all: html js svg css
 
-css: ${CSS_FILES}
+css:
 	mkdir -p www/css
 	cp -r css/* www/css/
+	cp -r common/css/* www/css/
 
-html: ${JADE_FILES}
+html:
 	jade --out www/ .
-
 
 dir:
 	mkdir -p www/js
