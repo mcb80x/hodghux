@@ -1,7 +1,7 @@
 # MCB80x Hodgkin-Huxley Simulator
 Some experiments in building a Hodkin-Huxley simulator for mcb80x.
 
-Live demo: [http://mcb80x.github.com/hodghux]()
+Live demo: [mcb80x.github.com/hodghux](http://mcb80x.github.com/hodghux)
 
 # Dependencies:
 
