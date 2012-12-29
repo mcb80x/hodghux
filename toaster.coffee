@@ -11,11 +11,11 @@ toast 'src'
 
   # => OPTIONS (optional, default values listed)
   # bare: false
-  # packaging: true
+  packaging: false
   # expose: 'window'
   # minify: true
 
   # => HTTPFOLDER (optional), RELEASE / DEBUG (required)
   httpfolder: 'js'
-  release: 'www/js/app.js'
-  debug: 'www/js/app-debug.js'
+  release: 'www/js/hh.js'
+  debug: 'www/js/hh-debug.js'
