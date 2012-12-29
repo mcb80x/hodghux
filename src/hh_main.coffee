@@ -2,35 +2,19 @@
 # Imports (using coffee-toaster directives)
 # ----------------------------------------------------
 
-root = window ? exports
-
+#<< common/util
 #<< common/bindings
-b = root.bindings
+b = bindings
 
 #<< common/oscilloscope
 
 #<< common/sim/hh_rk
-HHSimulationRK4 = root.HHSimulationRK4
+HHSimulationRK4 = common.sim.HHSimulationRK4
 
 #<< common/sim/stim
-SquareWavePulse = root.SquareWavePulse
-
-#<< common/util
-util = root.util
+SquareWavePulse = common.sim.SquareWavePulse
 
 
-# ----------------------------------------------------
-
-
-# Main initialization function; triggered after the SVG doc is
-# loaded
-svgDocumentReady = (xml) ->
-
-    # Attach the SVG to the DOM in the appropriate place
-    importedNode = document.importNode(xml.documentElement, true)
-    d3.select('#art').node().appendChild(importedNode)
-
-    initializeSimulation()
 
 initializeSimulation = () ->
 
@@ -42,9 +26,9 @@ initializeSimulation = () ->
 
     # Build a view model obj to manage KO bindings
     viewModel =
-        @NaChannelVisible: ko.observable(true)
-        @KChannelVisible: ko.observable(true)
-        @OscilloscopeVisible: ko.observable(false)
+        NaChannelVisible: ko.observable(true)
+        KChannelVisible: ko.observable(true)
+        OscilloscopeVisible: ko.observable(false)
 
     # Bind variables from the simulation to the view model
     b.exposeOutputBindings(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
@@ -86,7 +70,9 @@ initializeSimulation = () ->
     update = ->
 
         # Update the simulation
-        sim.step(b.update)
+        sim.step()
+
+        b.update()
 
         # stop if the result is silly
         if isNaN(sim.v)
@@ -110,6 +96,16 @@ initializeSimulation = () ->
     setInterval(watchDog, 500)
 
 
+# Main initialization function; triggered after the SVG doc is
+# loaded
+svgDocumentReady = (xml) ->
+
+    # Attach the SVG to the DOM in the appropriate place
+    importedNode = document.importNode(xml.documentElement, true)
+    d3.select('#art').node().appendChild(importedNode)
+
+    initializeSimulation()
+
 $ ->
-	# load the svg artwork and hook everything up
-	d3.xml('svg/membrane_hh_raster_shadows_embedded.svg', 'image/svg+xml', svgDocumentReady)
+    # load the svg artwork and hook everything up
+    d3.xml('svg/membrane_hh_raster_shadows_embedded.svg', 'image/svg+xml', svgDocumentReady)
