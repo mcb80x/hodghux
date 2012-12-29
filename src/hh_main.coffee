@@ -4,61 +4,61 @@
 
 #<< common/util
 #<< common/bindings
-b = bindings
-
 #<< common/oscilloscope
-
 #<< common/sim/hh_rk
-HHSimulationRK4 = common.sim.HHSimulationRK4
-
+#<< common/properties
 #<< common/sim/stim
+
+# Import a few names into this namespace for convenience
+HodgkinHuxleyNeuron = common.sim.HodgkinHuxleyNeuron
 SquareWavePulse = common.sim.SquareWavePulse
+ViewModel = common.ViewModel
 
 
 
 initializeSimulation = () ->
 
     # Build a new simulation object
-    sim = new HHSimulationRK4()
+    sim = HodgkinHuxleyNeuron()
 
-    # Build a square-wave pulse object
-    pulse = new SquareWavePulse([0.0, 1.0], 15.0)
+    # Build a square-wave pulse object and hook it up
+    pulse = SquareWavePulse().interval([0.0, 1.0])
+                             .amplitude(15.0)
+                             .I_stim(sim.I_ext)
+                             .t(sim.t)
 
     # Build a view model obj to manage KO bindings
-    viewModel =
-        NaChannelVisible: ko.observable(true)
-        KChannelVisible: ko.observable(true)
-        OscilloscopeVisible: ko.observable(false)
+    vm = new ViewModel()
 
-    # Bind variables from the simulation to the view model
-    b.exposeOutputBindings(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'], viewModel)
-    b.exposeInputBindings(sim, ['g_Na_max', 'g_K_max', 'g_L_max', 'I_ext'], viewModel)
+    # Bind properties from the simulation to the view model
+    vm.inheritProperties(sim, ['t', 'v', 'm', 'n', 'h', 'I_Na', 'I_K', 'I_L'])
+    vm.inheritProperties(sim, ['gbar_Na', 'gbar_K', 'gbar_L', 'I_ext'])
 
-    # Hook up the pulse object
-    b.bindOutput(pulse, 'I_stim', viewModel, 'I_ext')
-    b.bindInput(pulse, 't', viewModel, 't', -> pulse.update())
+    vm.NaChannelVisible = ko.observable(true)
+    vm.KChannelVisible = ko.observable(true)
+    vm.OscilloscopeVisible = ko.observable(false)
 
     # Add a few computed / derivative observables
-    viewModel.NaChannelOpen = ko.computed(-> (viewModel.m() > 0.5))
-    viewModel.KChannelOpen = ko.computed(-> (viewModel.n() > 0.65))
-    viewModel.BallAndChainOpen = ko.computed(-> (viewModel.h() > 0.3))
+    vm.NaChannelOpen = ko.computed(-> (vm.m() > 0.5))
+    vm.KChannelOpen = ko.computed(-> (vm.n() > 0.65))
+    vm.BallAndChainOpen = ko.computed(-> (vm.h() > 0.3))
 
     # Bind data to the svg to marionette parts of the artwork
-    b.bindVisible('#NaChannel', viewModel.NaChannelVisible)
-    b.bindVisible('#KChannel', viewModel.KChannelVisible)
-    b.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, viewModel.NaChannelOpen)
-    b.bindMultiState({'#KChannelClosed':false, '#KChannelOpen':true}, viewModel.KChannelOpen)
-    b.bindMultiState({'#BallAndChainClosed':false, '#BallAndChainOpen':true}, viewModel.BallAndChainOpen)
+    svgbind.bindVisible('#NaChannel', vm.NaChannelVisible)
+    svgbind.bindVisible('#KChannel', vm.KChannelVisible)
+    svgbind.bindMultiState({'#NaChannelClosed':false, '#NaChannelOpen':true}, vm.NaChannelOpen)
+    svgbind.bindMultiState({'#KChannelClosed':false, '#KChannelOpen':true}, vm.KChannelOpen)
+    svgbind.bindMultiState({'#BallAndChainClosed':false, '#BallAndChainOpen':true}, vm.BallAndChainOpen)
 
-    b.bindAttr('#NaArrow', 'opacity', viewModel.I_Na, d3.scale.linear().domain([0, -100]).range([0, 1.0]))
-    b.bindAttr('#KArrow', 'opacity', viewModel.I_K, d3.scale.linear().domain([20, 100]).range([0, 1.0]))
+    svgbind.bindAttr('#NaArrow', 'opacity', vm.I_Na, d3.scale.linear().domain([0, -100]).range([0, 1.0]))
+    svgbind.bindAttr('#KArrow', 'opacity', vm.I_K, d3.scale.linear().domain([20, 100]).range([0, 1.0]))
 
     # Set the html-based Knockout.js bindings in motion
     # This will allow templated 'data-bind' directives to automagically control the simulation / views
-    ko.applyBindings(viewModel)
+    ko.applyBindings(vm)
 
     # Make an oscilloscope and attach it to the svg
-    oscope = oscilloscope('#art svg', '#oscope').data(-> [sim.t, sim.v])
+    oscope = oscilloscope('#art svg', '#oscope').data(-> [sim.t(), sim.v()])
 
     # Float a div over a rect in the svg
     util.floatOverRect('#art svg', '#floatrect', '#floaty')
@@ -72,17 +72,16 @@ initializeSimulation = () ->
         # Update the simulation
         sim.step()
 
-        b.update()
-
         # stop if the result is silly
-        if isNaN(sim.v)
+        if isNaN(sim.v())
             runSimulation = false
+            console.log('stopping sim...')
             return
 
         # Tell the oscilloscope to plot
         oscope.plot()
 
-        if sim.t >= maxSimTime
+        if sim.t() >= maxSimTime
             sim.reset()
             oscope.reset()
 

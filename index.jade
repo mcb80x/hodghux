@@ -18,9 +18,9 @@ html
 
     #floaty.properties-pane
       label Na Conductance:
-        span(data-bind='text: g_Na_max')
+        span(data-bind='text: gbar_Na')
       br
-      div(data-bind="slider: g_Na_max, sliderOptions: {min: 0, max: 300, range: false, step: 5}")
+      div(data-bind="slider: gbar_Na, sliderOptions: {min: 0, max: 300, range: false, step: 5}")
 
     #properties
       ul
@@ -49,10 +49,6 @@ html
           label h:
             p(data-bind='text: h')
 
-        li
-          label g_Na_max:
-            span(data-bind='text: g_Na_max')
-            div(data-bind="slider: g_Na_max, sliderOptions: {min: 0, max: 300, range: false, step: 5}")
         li
           label Na Channel Visible:
             input(type='checkbox', data-bind="checked: NaChannelVisible")
